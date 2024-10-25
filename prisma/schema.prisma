@@ -25,11 +25,11 @@ model Product {
     id          String   @id @default(uuid())
     title       String
     description String
-    content     String
+    content     String?
     price       Float
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    imageUrl    String
+    imageUrl    String?
     orders      Order[]
 }
 
@@ -41,6 +41,22 @@ model Order {
     updatedAt  DateTime @updatedAt
     customer   Customer @relation(fields: [customerId], references: [id])
     customerId String
-    product    Product  @relation(fields: [productId], references: [id])
-    productId  String
+
+    // add products key to Order model to store the products and refer to their ids for easily indexing
+    productIds String[]
+    // products   Product[] 
+
+    fulfilmentStatus FulfilmentStatus
+    Product          Product?         @relation(fields: [productId], references: [id])
+    productId        String?
+}
+
+enum FulfilmentStatus {
+    PENDING
+    PROCESSING
+    DISPATCHED
+    OUT_FOR_DELIVERY
+    DELIVERED
+    CANCELLED
+    RETURNED
 }

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { title } from "process";
 
 export const productsRouter = createTRPCRouter({
   hello: publicProcedure
@@ -14,28 +15,30 @@ export const productsRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        name: z.string().min(1),
-        email: z.string().email(),
-        phone: z.string().min(10),
-        address: z.string().min(1),
+        title: z.string().min(3),
+        description: z.string(),
+        content: z.string().optional(),
+        price: z.number(),
+        imageUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.customer.create({
+      return ctx.db.product.create({
         data: {
-          email: input.email,
-          name: input.name,
-          phone: input.phone,
-          address: input.address,
+          title: input.title,
+          description: input.description,
+          content: input.content,
+          price: input.price,
+          imageUrl: input.imageUrl,
         },
       });
     }),
 
-  //   getLatest: publicProcedure.query(async ({ ctx }) => {
-  //     const post = await ctx.db.post.findFirst({
-  //       orderBy: { createdAt: "desc" },
-  //     });
+  getLatest: publicProcedure.query(async ({ ctx }) => {
+    const products = await ctx.db.product.findMany({
+      orderBy: { createdAt: "desc" },
+    });
 
-  // return post ?? null;
-  //   }),
+    return products ?? null;
+  }),
 });

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { FulfilmentStatus } from "@prisma/client";
 
 export const ordersRouter = createTRPCRouter({
   hello: publicProcedure
@@ -14,28 +15,48 @@ export const ordersRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        name: z.string().min(1),
-        email: z.string().email(),
-        phone: z.string().min(10),
-        address: z.string().min(1),
+        quantity: z.number(),
+        total: z.number(),
+        fulfilmentStatus: z.nativeEnum(FulfilmentStatus),
+        productIds: z.array(z.string()),
+        customerId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.customer.create({
+      // ctx.db.order.createMany({
+      //   data: [
+      //     {
+      //       quantity: Number(input.quantity),
+      //       total: Number(input.total),
+      //       fulfilmentStatus: input.fulfilmentStatus,
+      //       productIds: input.productIds,
+      //       customerId: input.customerId,
+      //     },
+      //   ],
+      // });
+      return ctx.db.order.create({
         data: {
-          email: input.email,
-          name: input.name,
-          phone: input.phone,
-          address: input.address,
+          quantity: Number(input.quantity),
+          total: Number(input.total),
+          fulfilmentStatus: input.fulfilmentStatus,
+          productIds: input.productIds,
+          customer: {
+            connect: { id: input.customerId },
+          },
         },
       });
     }),
 
-  //   getLatest: publicProcedure.query(async ({ ctx }) => {
-  //     const post = await ctx.db.post.findFirst({
-  //       orderBy: { createdAt: "desc" },
-  //     });
+  getOrders: publicProcedure.query(async ({ ctx }) => {
+    const orders = await ctx.db.order.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        customer: true,
+      },
+      take: 100,
+    });
+    const countOfOrders = await ctx.db.order.count();
 
-  // return post ?? null;
-  //   }),
+    return { orders, total: countOfOrders };
+  }),
 });

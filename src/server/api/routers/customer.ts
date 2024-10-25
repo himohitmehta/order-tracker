@@ -16,7 +16,7 @@ export const customerRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         email: z.string().email(),
-        phone: z.string().min(10),
+        phone: z.string().optional(),
         address: z.string().min(1),
       }),
     )
@@ -25,17 +25,17 @@ export const customerRouter = createTRPCRouter({
         data: {
           email: input.email,
           name: input.name,
-          phone: input.phone,
+          phone: input?.phone ?? "",
           address: input.address,
         },
       });
     }),
 
-  //   getLatest: publicProcedure.query(async ({ ctx }) => {
-  //     const post = await ctx.db.post.findFirst({
-  //       orderBy: { createdAt: "desc" },
-  //     });
+  getCustomers: publicProcedure.query(async ({ ctx }) => {
+    const customers = await ctx.db.customer.findMany({
+      orderBy: { createdAt: "desc" },
+    });
 
-  // return post ?? null;
-  //   }),
+    return customers ?? null;
+  }),
 });
