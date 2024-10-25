@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { columns } from "@/components/orders/columns";
-import { taskSchema } from "@/components/orders/data/schema";
-import { DataTable } from "@/components/orders/table";
 import {
   api,
   //  api,
