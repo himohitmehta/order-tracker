@@ -47,16 +47,24 @@ export const ordersRouter = createTRPCRouter({
       });
     }),
 
-  getOrders: publicProcedure.query(async ({ ctx }) => {
-    const orders = await ctx.db.order.findMany({
-      orderBy: { createdAt: "desc" },
-      include: {
-        customer: true,
-      },
-      take: 100,
-    });
-    const countOfOrders = await ctx.db.order.count();
+  getOrders: publicProcedure
+    .input(
+      z.object({
+        page: z.number().optional(),
+        pageSize: z.number().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const orders = await ctx.db.order.findMany({
+        orderBy: { createdAt: "desc" },
+        include: {
+          customer: true,
+        },
+        take: input.pageSize,
+        skip: input.page,
+      });
+      const countOfOrders = await ctx.db.order.count();
 
-    return { orders, total: countOfOrders };
-  }),
+      return { orders, total: countOfOrders };
+    }),
 });

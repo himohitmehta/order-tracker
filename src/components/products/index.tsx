@@ -1,11 +1,11 @@
 "use client";
 import { api } from "@/trpc/react";
 import React, { useState } from "react";
-import { Form } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { faker } from "@faker-js/faker";
-import { createRandomProducts } from "./data/seed";
-import Image from "next/image";
+// import { Form } from "../ui/form";
+// import { useForm } from "react-hook-form";
+// import { faker } from "@faker-js/faker";
+// import { createRandomProducts } from "./data/seed";
+// import Image from "next/image";
 import { toast } from "sonner";
 import products from "./data/data.json";
 import { Button } from "../ui/button";

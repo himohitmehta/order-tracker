@@ -14,6 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePagination } from "@/lib/hooks/use-pagination";
+// import { useTablePagination } from "@/lib/hooks/use-pagination";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -22,13 +24,18 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({
   table,
-  totalRows,
+  // totalRows,
 }: DataTablePaginationProps<TData>) {
+  // const {
+
+  // }=usePagination()
+  // const { page, setPage } = useTablePagination();
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getFilteredSelectedRowModel().rows.length}
+        of {table.getFilteredRowModel().rows.length}
+        row(s) selected.
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">

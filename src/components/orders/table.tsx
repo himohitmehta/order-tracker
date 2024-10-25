@@ -27,18 +27,30 @@ import {
 
 import { DataTablePagination } from "./table-pagination";
 import { DataTableToolbar } from "./table-toolbar";
+import { api } from "@/trpc/react";
+// import Pagination from "./pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  totalRows?: number;
+  // data: TData[];
+  // totalRows?: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
-  totalRows,
+  // data,
+  // totalRows,
 }: DataTableProps<TData, TValue>) {
+  const [pagination, setPagination] = React.useState({
+    pageSize: 10,
+    pageIndex: 0,
+  });
+  const { data: ordersData, isLoading } = api.orders.getOrders.useQuery({
+    page: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+  });
+  const data = ordersData?.orders as TData[];
+  const totalRows = ordersData?.total;
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -55,9 +67,12 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination,
+
+      
     },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
+    // enableRowSelection: true,
+    // onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -67,8 +82,15 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    rowCount: totalRows ?? 0,
+    onPaginationChange: setPagination,
+    manualPagination: true,
+    
   });
 
+  if(isLoading){
+    return <div>Loading...</div>
+  }
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
@@ -122,7 +144,8 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} totalRows={totalRows} />
+      {/* <Pagination pageSize={10} totalCount={totalRows!} /> */}
+      <DataTablePagination table={table} totalRows={totalRows!} />
     </div>
   );
 }
