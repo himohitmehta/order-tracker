@@ -75,7 +75,7 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Order" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-[200px]">{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -104,21 +104,21 @@ export const orderColumns: ColumnDef<OrderType>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      // const status = statuses.find(
-      //   (status) => status.value === row.getValue("fulfilmentStatus"),
-      // );
+      const status = statuses.find(
+        (status) => status.value === row.getValue("fulfilmentStatus"),
+      );
 
-      // if (!status) {
-      //   return null;
-      // }
+      if (!status) {
+        return null;
+      }
 
       return (
         <div className="flex w-[100px] items-center">
-          {/* {status.icon && (
+          {status.icon && (
             <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )} */}
-          {row.getValue("fulfilmentStatus")}
-          {/* <span>{status.label}</span> */}
+          )}
+          {/* {row.getValue("fulfilmentStatus")} */}
+          <span>{status.label}</span>
         </div>
       );
     },

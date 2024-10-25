@@ -1,3 +1,4 @@
+import { FulfilmentStatus } from "@prisma/client";
 import {
   ArrowDownIcon,
   ArrowRightIcon,
@@ -25,28 +26,47 @@ export const labels = [
 
 export const statuses = [
   {
-    value: "backlog",
-    label: "Backlog",
+    // value: "backlog",
+    // label: "Backlog",
+    value: FulfilmentStatus.CANCELLED,
+    label: "Cancelled",
+
     icon: FaQuestionCircle,
   },
   {
-    value: "todo",
-    label: "Todo",
+    // value: "todo",
+    // label: "Todo",
+    value: FulfilmentStatus.PENDING,
+    label: "Pending",
     icon: CircleIcon,
   },
   {
-    value: "in progress",
-    label: "In Progress",
+    // value: "in progress",
+    // label: "In Progress",
+
+    value: FulfilmentStatus.PROCESSING,
+    label: "Processing",
     icon: FaStopwatch,
   },
   {
-    value: "done",
-    label: "Done",
+    // value: "done",
+    // label: "Done",
+    value: FulfilmentStatus.DELIVERED,
+    label: "Delivered",
     icon: CheckCircle,
   },
   {
-    value: "canceled",
-    label: "Canceled",
+    // value: "canceled",
+    // label: "Canceled",
+    value: FulfilmentStatus.OUT_FOR_DELIVERY,
+    label: "Out for Delivery",
+    icon: MdClose,
+  },
+  {
+    // value: "canceled",
+    // label: "Canceled",
+    value: FulfilmentStatus.RETURNED,
+    label: "Returned",
     icon: MdClose,
   },
 ];

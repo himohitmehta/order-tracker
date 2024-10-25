@@ -28,6 +28,8 @@ import {
 import { DataTablePagination } from "./table-pagination";
 import { DataTableToolbar } from "./table-toolbar";
 import { api } from "@/trpc/react";
+import { FulfilmentStatus } from "@prisma/client";
+import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
 // import Pagination from "./pagination";
 
 interface DataTableProps<TData, TValue> {
@@ -45,12 +47,6 @@ export function DataTable<TData, TValue>({
     pageSize: 10,
     pageIndex: 0,
   });
-  const { data: ordersData, isLoading } = api.orders.getOrders.useQuery({
-    page: pagination.pageIndex,
-    pageSize: pagination.pageSize,
-  });
-  const data = ordersData?.orders as TData[];
-  const totalRows = ordersData?.total;
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -58,6 +54,20 @@ export function DataTable<TData, TValue>({
     [],
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const { query } = useTableFilters({ title: "Status" });
+  console.log({ columnFilters, query });
+  const { data: ordersData, isLoading } = api.orders.getOrders.useQuery({
+    page: pagination.pageIndex,
+    pageSize: pagination.pageSize,
+    fulfilmentStatus: query,
+    // fulfilmentStatus: columnFilters.filter(
+    //   (item) => item.id === "fulfilmentStatus",
+    // )?.values,
+  });
+
+  const data = ordersData?.orders as TData[];
+  const totalRows = ordersData?.total;
 
   const table = useReactTable({
     data,
@@ -68,8 +78,6 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
       pagination,
-
-      
     },
     // enableRowSelection: true,
     // onRowSelectionChange: setRowSelection,
@@ -85,11 +93,10 @@ export function DataTable<TData, TValue>({
     rowCount: totalRows ?? 0,
     onPaginationChange: setPagination,
     manualPagination: true,
-    
   });
 
-  if(isLoading){
-    return <div>Loading...</div>
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
   return (
     <div className="space-y-4">

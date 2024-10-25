@@ -52,18 +52,48 @@ export const ordersRouter = createTRPCRouter({
       z.object({
         page: z.number().optional(),
         pageSize: z.number().optional(),
+        customerName: z.string().optional(),
+        customerEmail: z.string().optional(),
+        fulfilmentStatus: z.array(z.string()).optional(),
+        //  z.nativeEnum(FulfilmentStatus).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
+      console.log({ input });
+      const filterCondition = {
+        customer: {
+          name: {
+            contains: input.customerName ?? "",
+          },
+          email: {
+            contains: input.customerEmail ?? "",
+          },
+        },
+        fulfilmentStatus: {
+          in: input.fulfilmentStatus as FulfilmentStatus[],
+          // [FulfilmentStatus.DELIVERED, FulfilmentStatus.PENDING],
+          // input.fulfilmentStatus,
+        },
+      };
+
       const orders = await ctx.db.order.findMany({
         orderBy: { createdAt: "desc" },
         include: {
           customer: true,
+          // _count: {
+          //   select: { productIds: true },
+          // },
         },
-        take: input.pageSize,
-        skip: input.page,
+        where: filterCondition,
+        // having: {
+
+        // },
+        take: input.pageSize ?? 10,
+        skip: input.page ?? 0,
       });
-      const countOfOrders = await ctx.db.order.count();
+      const countOfOrders = await ctx.db.order.count({
+        where: filterCondition,
+      });
 
       return { orders, total: countOfOrders };
     }),

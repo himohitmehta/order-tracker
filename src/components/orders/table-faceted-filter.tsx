@@ -23,6 +23,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { parseAsString, useQueryState } from "nuqs";
+import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
+import { api } from "@/trpc/react";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -41,6 +44,14 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
+  // const [query, setQuery] = useQueryState(
+  //   title!,
+  //   parseAsString.withOptions({
+  //     clearOnDefault: true,
+  //   }),
+  // );
+  const { query, setQuery } = useTableFilters({ title: title! });
+  const utils = api.useUtils();
 
   return (
     <Popover>
@@ -94,11 +105,16 @@ export function DataTableFacetedFilter<TData, TValue>({
                 return (
                   <CommandItem
                     key={option.value}
-                    onSelect={() => {
+                    onSelect={async () => {
                       if (isSelected) {
                         selectedValues.delete(option.value);
+                        // setQuery(option.value);
+                        await setQuery(Array.from(selectedValues));
+                        utils.orders.invalidate();
                       } else {
                         selectedValues.add(option.value);
+                        await setQuery(Array.from(selectedValues));
+                        utils.orders.invalidate();
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
@@ -108,7 +124,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                   >
                     <div
                       className={cn(
-                        "border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
+                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible",
@@ -117,7 +133,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
                     {option.icon && (
-                      <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
+                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
