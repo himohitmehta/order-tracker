@@ -28,11 +28,11 @@ import {
 import { DataTablePagination } from "./table-pagination";
 import { DataTableToolbar } from "./table-toolbar";
 import { api } from "@/trpc/react";
-import { FulfilmentStatus } from "@prisma/client";
+// import { FulfilmentStatus } from "@prisma/client";
 import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
 import { Skeleton } from "../ui/skeleton";
 import { useSearchQuery } from "@/lib/hooks/orders/use-search-query";
-import { keepPreviousData } from "@tanstack/react-query";
+// import { keepPreviousData } from "@tanstack/react-query";
 // import Pagination from "./pagination";
 
 interface DataTableProps<TData, TValue> {
@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({
     pageSize: 10,
     pageIndex: 0,
   });
-  const [rowSelection, setRowSelection] = React.useState({});
+  // const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -64,12 +64,12 @@ export function DataTable<TData, TValue>({
   const { query: endDate } = useSearchQuery({ title: "endDate" });
 
   const { query: dateSortOrder } = useSearchQuery({ title: "dateOrder" });
-  const { query: totalSortOrder } = useSearchQuery({ title: "total" });
+  // const { query: totalSortOrder } = useSearchQuery({ title: "total" });
 
   console.log({ columnFilters, query });
   const {
     data: ordersData,
-    isLoading,
+    // isLoading,
     isRefetching,
     isFetching,
     isPending,
@@ -100,7 +100,7 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnVisibility,
-      rowSelection,
+      // rowSelection,
       columnFilters,
       pagination,
     },

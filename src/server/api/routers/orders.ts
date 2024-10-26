@@ -2,8 +2,6 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { FulfilmentStatus } from "@prisma/client";
-import { faker } from "@faker-js/faker";
-import { start } from "repl";
 
 export const ordersRouter = createTRPCRouter({
   hello: publicProcedure
@@ -179,29 +177,6 @@ export const ordersRouter = createTRPCRouter({
         skip: input.page ?? 0,
       });
 
-      // let result = [];
-      // for (const order of orders) {
-      //   const productIds = order.productIds;
-      //   const products = await ctx.db.product.findMany({
-      //     where: {
-      //       id: {
-      //         in: productIds,
-      //       },
-      //     },
-      //   });
-
-      //   result.push({
-      //     ...order,
-      //     products,
-      //   });
-      // }
-      // const productDetails = await ctx.db.product.findMany({
-      //   where: {
-      //     id: {
-      //       in: orders.map((order) => order.productIds).flat(),
-      //     },
-      //   },
-      // });
       const countOfOrders = await ctx.db.order.count({
         where: {
           customer: {

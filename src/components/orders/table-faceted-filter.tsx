@@ -23,7 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { parseAsString, useQueryState } from "nuqs";
+// import { parseAsString, useQueryState } from "nuqs";
 import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
 import { api } from "@/trpc/react";
 
@@ -42,7 +42,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const facets = column?.getFacetedUniqueValues();
+  // const facets = column?.getFacetedUniqueValues();
   const { query, setQuery } = useTableFilters({ title: title! });
 
   const selectedValues = new Set(

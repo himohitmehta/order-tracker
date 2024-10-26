@@ -3,10 +3,10 @@ import React from "react";
 
 export default function Navbar() {
   return (
-    <div className="flex gap-4 mx-auto max-w-screen-xl px-2">
+    <div className="mx-auto flex max-w-screen-xl gap-4 px-2">
       {links.map((link) => {
         return (
-          <div>
+          <div key={link.title}>
             <Link href={link.url}>{link.title}</Link>
           </div>
         );
@@ -21,10 +21,10 @@ const links = [
   },
   {
     title: "Products",
-    url: "/products",
+    url: "/",
   },
   {
     title: "Customers",
-    url: "/customers",
+    url: "/",
   },
 ];

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import { users } from "./data/seed";
 // import { faker } from "@faker-js/faker";
 // import { createRandomUser } from "./data/seed";
@@ -18,7 +18,7 @@ export default function Customers() {
   //     setCustomers(users);
   //   }, [users]);
 
-  const { mutate, isPending } = api.customer.create.useMutation({
+  const { mutate } = api.customer.create.useMutation({
     onSuccess: () => {
       toast.success("Customer added successfully");
     },

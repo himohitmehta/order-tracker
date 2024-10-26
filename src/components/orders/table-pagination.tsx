@@ -14,8 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePagination } from "@/lib/hooks/use-pagination";
-// import { useTablePagination } from "@/lib/hooks/use-pagination";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;

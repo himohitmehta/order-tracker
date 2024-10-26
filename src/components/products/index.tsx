@@ -21,15 +21,15 @@ export default function Products() {
   //     },
   //   });
 
-  const { mutate, isPending } = api.products.create.useMutation({
+  const { mutate,  } = api.products.create.useMutation({
     onSuccess: () => {
       toast.success("Product added successfully");
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const handleClickAddProducts = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     products.forEach((product) => {
       mutate({
         description: product.description,
@@ -38,9 +38,9 @@ export default function Products() {
 
         // phone: user.phone,
       });
-      console.log({ product }, "added this product", product);
+      // console.log({ product }, "added this product", product);
     });
-    setIsLoading(false);
+    // setIsLoading(false);
     toast.success("Customers added successfully");
   };
 

@@ -32,17 +32,17 @@ export function DatePickerWithRange({
   });
   const handleSetDate = async (value: DateRange) => {
     if (!value.from || !value.to) return;
-    const from = format(value.from!, "yyyy-MM-dd");
-    const to = format(value.to!, "yyyy-MM-dd");
+    const from = format(value.from, "yyyy-MM-dd");
+    const to = format(value.to, "yyyy-MM-dd");
     await setStartDate(from);
     await setEndDate(to);
     setDate(value);
   };
-  const handleResetDate = async () => {
-    await setStartDate("");
-    await setEndDate("");
-    setDate(undefined);
-  };
+//   const handleResetDate = async () => {
+//     await setStartDate("");
+//     await setEndDate("");
+//     setDate(undefined);
+//   };
 
   return (
     <div className="flex gap-4">

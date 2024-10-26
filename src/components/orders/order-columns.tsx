@@ -5,13 +5,11 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Badge } from "@/components/ui/badge";
+// import { Checkbox } from "@/components/ui/checkbox";
 
-import { labels, priorities, statuses } from "./data/data";
-import { type Task } from "./data/schema";
+import { statuses } from "./data/data";
 import { DataTableColumnHeader } from "./table-column-header";
-import { DataTableRowActions } from "./table-row-actions";
 import { type Order, Customer } from "@prisma/client";
 import { format } from "date-fns";
 

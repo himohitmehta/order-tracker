@@ -36,10 +36,11 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
   orderKey,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const { setQuery } = useSearchQuery({ title: orderKey! });
+
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
-  const { query, setQuery } = useSearchQuery({ title: orderKey! });
 
   return (
     <div className={cn("flex items-center space-x-2", className)}>
