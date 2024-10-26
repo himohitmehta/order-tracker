@@ -21,7 +21,7 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  // const isFiltered = table.getState().columnFilters.length > 0;
   const { query: search, setQuery } = useSearchQuery({ title: "search" });
   const [value, setValue] = useState(search ?? "");
   const debounced = useDebouncedCallback(async (value: string) => {
@@ -32,6 +32,25 @@ export function DataTableToolbar<TData>({
     value,
     search,
   });
+  const { query: startDate, setQuery: setStartDate } = useSearchQuery({
+    title: "startDate",
+  });
+
+  const { query: endDate, setQuery: setEndDate } = useSearchQuery({
+    title: "endDate",
+  });
+  const { query: status, setQuery: setStatus } = useTableFilters({
+    title: "Status",
+  });
+  const isFiltered = status.length > 0 || startDate || endDate || search;
+
+  const handleResetDate = async () => {
+    await setStartDate("");
+    await setEndDate("");
+    await setQuery("");
+    await setStatus([]);
+    // setDate(undefined);
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -64,10 +83,12 @@ export function DataTableToolbar<TData>({
             options={priorities}
           />
         )}
+        <DatePickerWithRange />
+
         {isFiltered && (
           <Button
             variant="ghost"
-            onClick={() => table.resetColumnFilters()}
+            onClick={() => handleResetDate()}
             className="h-8 px-2 lg:px-3"
           >
             Reset
@@ -75,9 +96,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <div>
-        <DatePickerWithRange />
-      </div>
+      <div></div>
       <DataTableViewOptions table={table} />
     </div>
   );

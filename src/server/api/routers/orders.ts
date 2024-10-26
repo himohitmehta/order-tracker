@@ -99,34 +99,34 @@ export const ordersRouter = createTRPCRouter({
         //  z.nativeEnum(FulfilmentStatus).optional(),
         startDate: z.string().optional(),
         endDate: z.string().optional(),
+        dateSortOrder: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
-      console.log({ input });
-
       const statusArray = Object.values(FulfilmentStatus);
       const fulfilmentStatusArray =
         input?.fulfilmentStatus?.length === 0
           ? statusArray
           : input.fulfilmentStatus;
-      console.log({ statusArray, fulfilmentStatusArray });
 
       const filterCondition = {
         customer: {
-          OR: [
-            {
-              name: {
-                contains: input.customer ?? "",
-                mode: "insensitive",
+          is: {
+            OR: [
+              {
+                name: {
+                  contains: input.customer ?? "",
+                  mode: "insensitive",
+                },
               },
-            },
-            {
-              email: {
-                contains: input.customer ?? "",
-                mode: "insensitive",
+              {
+                email: {
+                  contains: input.customer ?? "",
+                  mode: "insensitive",
+                },
               },
-            },
-          ],
+            ],
+          },
         },
         createdAt: {
           gte: input.startDate ? new Date(input.startDate) : undefined,
@@ -137,17 +137,44 @@ export const ordersRouter = createTRPCRouter({
           in: fulfilmentStatusArray as FulfilmentStatus[],
         },
       };
-      console.log({ filterCondition });
+
+      const dateSortOrder = input.dateSortOrder === "asc" ? "asc" : "desc";
 
       const orders = await ctx.db.order.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: {
+          createdAt: dateSortOrder ?? "desc",
+        },
         include: {
           customer: true,
         },
         where: {
-          ...filterCondition,
-        },
+          customer: {
+            is: {
+              OR: [
+                {
+                  name: {
+                    contains: input.customer ?? "",
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  email: {
+                    contains: input.customer ?? "",
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            },
+          },
+          createdAt: {
+            gte: input.startDate ? new Date(input.startDate) : undefined,
+            lte: input.endDate ? new Date(input.endDate) : undefined,
+          },
 
+          fulfilmentStatus: {
+            in: fulfilmentStatusArray as FulfilmentStatus[],
+          },
+        },
         take: input.pageSize ?? 10,
         skip: input.page ?? 0,
       });
@@ -176,7 +203,34 @@ export const ordersRouter = createTRPCRouter({
       //   },
       // });
       const countOfOrders = await ctx.db.order.count({
-        where: filterCondition,
+        where: {
+          customer: {
+            is: {
+              OR: [
+                {
+                  name: {
+                    contains: input.customer ?? "",
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  email: {
+                    contains: input.customer ?? "",
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            },
+          },
+          createdAt: {
+            gte: input.startDate ? new Date(input.startDate) : undefined,
+            lte: input.endDate ? new Date(input.endDate) : undefined,
+          },
+
+          fulfilmentStatus: {
+            in: fulfilmentStatusArray as FulfilmentStatus[],
+          },
+        },
       });
 
       return { orders, total: countOfOrders, filterCondition };

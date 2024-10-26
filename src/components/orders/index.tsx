@@ -1,11 +1,10 @@
 "use client";
-import { api } from "@/trpc/react";
+// import { api } from "@/trpc/react";
 import React from "react";
 import { DataTable } from "./table";
 import { orderColumns } from "./order-columns";
-import { Button } from "../ui/button";
-import { toast } from "sonner";
-import { FulfilmentStatus } from "@prisma/client";
+// import { Button } from "../ui/button";
+// import { toast } from "sonner";
 
 export default function Orders() {
   // const { data, isLoading } = api.orders.getOrders.useQuery({
@@ -96,18 +95,18 @@ export default function Orders() {
   // console.log({ orders });
   // if (!orders && isLoading) return <div>Loading...</div>;
   // if (orders)
-  const { mutate } = api.orders.updateAllOrders.useMutation({
-    onSuccess() {
-      toast.success("Orders updated successfully");
-    },
-  });
-  const handleUpdateOrders = async () => {
-    // await api.orders.updateAllOrders.useMutation()
-    mutate();
-  };
+  // const { mutate } = api.orders.updateAllOrders.useMutation({
+  //   onSuccess() {
+  //     toast.success("Orders updated successfully");
+  //   },
+  // });
+  // const handleUpdateOrders = async () => {
+  //   // await api.orders.updateAllOrders.useMutation()
+  //   mutate();
+  // };
   return (
     <div>
-      <Button onClick={handleUpdateOrders}>Update Orders</Button>
+      {/* <Button onClick={handleUpdateOrders}>Update Orders</Button> */}
       <DataTable
         //  data={orders}
         columns={orderColumns}

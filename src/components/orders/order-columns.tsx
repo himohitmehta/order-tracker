@@ -83,7 +83,11 @@ export const orderColumns: ColumnDef<OrderType>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Ordered On" />
+      <DataTableColumnHeader
+        column={column}
+        title="Ordered On"
+        orderKey={"dateOrder"}
+      />
     ),
     cell: ({ row }) => (
       <div className="w-[200px]">
@@ -166,7 +170,11 @@ export const orderColumns: ColumnDef<OrderType>[] = [
   {
     accessorKey: "total",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Order Total" />
+      <DataTableColumnHeader
+        column={column}
+        title="Order Total"
+        orderKey={"total"}
+      />
     ),
     cell: ({ row }) => {
       const total = new Intl.NumberFormat("en-IN", {

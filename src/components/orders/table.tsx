@@ -63,6 +63,9 @@ export function DataTable<TData, TValue>({
   const { query: startDate } = useSearchQuery({ title: "startDate" });
   const { query: endDate } = useSearchQuery({ title: "endDate" });
 
+  const { query: dateSortOrder } = useSearchQuery({ title: "dateOrder" });
+  const { query: totalSortOrder } = useSearchQuery({ title: "total" });
+
   console.log({ columnFilters, query });
   const {
     data: ordersData,
@@ -72,18 +75,19 @@ export function DataTable<TData, TValue>({
     isPending,
   } = api.orders.getOrders.useQuery(
     {
-      page: pagination.pageIndex,
+      page: pagination.pageIndex * pagination.pageSize,
       pageSize: pagination.pageSize,
       fulfilmentStatus: query,
       customer: search,
       startDate: startDate,
       endDate: endDate,
+      dateSortOrder: dateSortOrder,
       // fulfilmentStatus: columnFilters.filter(
       //   (item) => item.id === "fulfilmentStatus",
       // )?.values,
     },
     {
-      placeholderData: keepPreviousData,
+      // placeholderData: keepPreviousData,
     },
   );
 
@@ -119,11 +123,9 @@ export function DataTable<TData, TValue>({
   // if (isLoading) {
   //   return <div>Loading</div>;
   // }
-  if (isRefetching  || isFetching || isPending) {
+  if (isRefetching || isFetching || isPending) {
     return (
       <div className="space-y-4">
-        {/* <DataTableToolbar table={table} /> */}
-
         <div className="rounded-md border">
           <Table>
             <TableHeader>
@@ -132,12 +134,6 @@ export function DataTable<TData, TValue>({
                   {[1, 2, 3, 4, 5].map((header) => {
                     return (
                       <TableHead key={header} colSpan={1}>
-                        {/* {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )} */}
                         <Skeleton className="h-8 w-20" />
                       </TableHead>
                     );
@@ -154,10 +150,6 @@ export function DataTable<TData, TValue>({
                   >
                     {[12, 34, 56, 55, 666, 77, 88].map((cell) => (
                       <TableCell key={cell}>
-                        {/* {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )} */}
                         <Skeleton className="h-8 w-20" />
                       </TableCell>
                     ))}

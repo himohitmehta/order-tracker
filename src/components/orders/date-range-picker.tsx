@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { type DateRange } from "react-day-picker";
 
@@ -27,9 +27,11 @@ export function DatePickerWithRange({
   });
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: startDate ? new Date(startDate) : new Date(),
+
     to: endDate ? new Date(endDate) : new Date(),
   });
   const handleSetDate = async (value: DateRange) => {
+    if (!value.from || !value.to) return;
     const from = format(value.from!, "yyyy-MM-dd");
     const to = format(value.to!, "yyyy-MM-dd");
     await setStartDate(from);
@@ -49,6 +51,7 @@ export function DatePickerWithRange({
           <PopoverTrigger asChild>
             <Button
               id="date"
+              size="sm"
               variant={"outline"}
               className={cn(
                 "w-[300px] justify-start text-left font-normal",
@@ -66,7 +69,7 @@ export function DatePickerWithRange({
                   format(date.from, "LLL dd, y")
                 )
               ) : (
-                <span>Pick a date</span>
+                <span>Select date range to filter</span>
               )}
             </Button>
           </PopoverTrigger>
@@ -82,7 +85,9 @@ export function DatePickerWithRange({
           </PopoverContent>
         </Popover>
       </div>
-      <Button variant={'ghost'} size={'sm'} onClick={handleResetDate}>Reset</Button>
+      {/* <Button variant={"ghost"} size={"sm"} onClick={handleResetDate}>
+        Reset
+      </Button> */}
     </div>
   );
 }
