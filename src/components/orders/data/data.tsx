@@ -69,6 +69,11 @@ export const statuses = [
     label: "Returned",
     icon: MdClose,
   },
+  {
+    value: FulfilmentStatus.DISPATCHED,
+    label: "Dispatched",
+    icon: MdClose,
+  }
 ];
 
 export const priorities = [

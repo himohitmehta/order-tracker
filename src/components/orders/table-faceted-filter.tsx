@@ -110,11 +110,11 @@ export function DataTableFacetedFilter<TData, TValue>({
                         selectedValues.delete(option.value);
                         // setQuery(option.value);
                         await setQuery(Array.from(selectedValues));
-                        utils.orders.invalidate();
+                        await utils.orders.invalidate();
                       } else {
                         selectedValues.add(option.value);
                         await setQuery(Array.from(selectedValues));
-                        utils.orders.invalidate();
+                        await utils.orders.invalidate();
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
@@ -150,7 +150,10 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
+                    onSelect={async () => {
+                      column?.setFilterValue(undefined);
+                      await setQuery([]);
+                    }}
                     className="justify-center text-center"
                   >
                     Clear filters

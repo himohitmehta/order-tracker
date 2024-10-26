@@ -96,9 +96,18 @@ export default function Orders() {
   // console.log({ orders });
   // if (!orders && isLoading) return <div>Loading...</div>;
   // if (orders)
+  const { mutate } = api.orders.updateAllOrders.useMutation({
+    onSuccess() {
+      toast.success("Orders updated successfully");
+    },
+  });
+  const handleUpdateOrders = async () => {
+    // await api.orders.updateAllOrders.useMutation()
+    mutate();
+  };
   return (
     <div>
-      {/* <Button onClick={handleAddOrder}>Add Order</Button> */}
+      <Button onClick={handleUpdateOrders}>Update Orders</Button>
       <DataTable
         //  data={orders}
         columns={orderColumns}

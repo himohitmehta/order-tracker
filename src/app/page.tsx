@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {
+  api,
   // api,
   //  api,
   HydrateClient,
@@ -26,6 +27,7 @@ export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
 
   // void api.post.getLatest.prefetch();
+  await api.orders.getOrders({});
 
   return (
     <HydrateClient>

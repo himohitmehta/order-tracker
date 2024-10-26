@@ -13,6 +13,7 @@ import { type Task } from "./data/schema";
 import { DataTableColumnHeader } from "./table-column-header";
 import { DataTableRowActions } from "./table-row-actions";
 import { type Order, Customer } from "@prisma/client";
+import { format } from "date-fns";
 
 /**
  * {
@@ -80,6 +81,19 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Ordered On" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[200px]">
+        {format(new Date(row.getValue("createdAt")), "MMM dd, yyyy, hh:mm a")}
+      </div>
+    ),
+    // enableSorting: false,
+    // enableHiding: false,
+  },
+  {
     accessorKey: "customer",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Customer" />
@@ -97,6 +111,27 @@ export const orderColumns: ColumnDef<OrderType>[] = [
         </div>
       );
     },
+
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "productIds",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Products" />
+    ),
+    cell: ({ row }) => {
+      const productIds = row.original.productIds;
+      return (
+        <div className="w-[200px]">
+          {productIds.map((productId) => (
+            <p key={productId}>{productId}</p>
+          ))}
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "fulfilmentStatus",
@@ -125,6 +160,8 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "total",

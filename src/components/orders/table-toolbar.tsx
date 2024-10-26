@@ -9,7 +9,11 @@ import { DataTableViewOptions } from "./table-view-options";
 
 import { priorities, statuses } from "./data/data";
 import { DataTableFacetedFilter } from "./table-faceted-filter";
-
+import { DatePickerWithRange } from "./date-range-picker";
+import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
+import { useSearchQuery } from "@/lib/hooks/orders/use-search-query";
+import { useDebouncedCallback } from "use-debounce";
+import { useState } from "react";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
@@ -18,17 +22,31 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const { query: search, setQuery } = useSearchQuery({ title: "search" });
+  const [value, setValue] = useState(search ?? "");
+  const debounced = useDebouncedCallback(async (value: string) => {
+    setValue(value);
+    await setQuery(value);
+  }, 1000);
+  console.log({
+    value,
+    search,
+  });
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter Orders..."
-          value={
-            (table.getColumn("customer")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("customer")?.setFilterValue(event.target.value)
+          defaultValue={search}
+          // value={
+          //   value
+          //   // (table.getColumn("customer")?.getFilterValue() as string) ?? ""
+          // }
+          onChange={
+            (e) => debounced(e.target.value)
+            // async (event) => await setQuery(event.target.value)
+            // table.getColumn("customer")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
@@ -56,6 +74,9 @@ export function DataTableToolbar<TData>({
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
+      </div>
+      <div>
+        <DatePickerWithRange />
       </div>
       <DataTableViewOptions table={table} />
     </div>
