@@ -2,7 +2,6 @@
 import React from "react";
 import { DataTable } from "./table";
 import { orderColumns } from "./order-columns";
-import { UserNav } from "./user-nav";
 
 export default function Orders() {
   return (

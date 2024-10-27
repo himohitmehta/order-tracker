@@ -1,8 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { CalendarDays } from "lucide-react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   HoverCard,
@@ -58,8 +55,10 @@ export default function OrderItemDetails({
               return (
                 <div key={item.id} className="my-2 flex flex-col gap-2">
                   <h1 className="text-xl font-semibold">{item.title}</h1>
-                  <p className="text-sm font-medium text-muted-foreground">{item.description}</p>
-                  <p className="font-semibold ">Price: ${item.price}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {item.description}
+                  </p>
+                  <p className="font-semibold">Price: ${item.price}</p>
                 </div>
               );
             })}

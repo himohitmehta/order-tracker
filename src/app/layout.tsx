@@ -4,7 +4,6 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
-import Navbar from "@/components/shared/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 export const metadata: Metadata = {
@@ -22,7 +21,6 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <Toaster />
-          {/* <Navbar /> */}
           <NuqsAdapter>{children}</NuqsAdapter>
         </TRPCReactProvider>
       </body>

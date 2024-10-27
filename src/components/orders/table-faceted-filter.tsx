@@ -48,6 +48,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   const selectedValues = new Set(
     query ?? (column?.getFilterValue() as string[]),
   );
+  console.log({ selectedValues, query, filterValue: column?.getFilterValue() });
   // const [query, setQuery] = useQueryState(
   //   title!,
   //   parseAsString.withOptions({

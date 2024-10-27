@@ -32,6 +32,7 @@ import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
 import { Skeleton } from "../ui/skeleton";
 import { useSearchQuery } from "@/lib/hooks/orders/use-search-query";
 import { keepPreviousData } from "@tanstack/react-query";
+import { Button } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,7 +59,11 @@ export function DataTable<TData, TValue>({
 
   const { query: dateSortOrder } = useSearchQuery({ title: "dateOrder" });
 
-  const { data: ordersData, isLoading } = api.orders.getOrders.useQuery(
+  const {
+    data: ordersData,
+    isLoading,
+    isRefetching,
+  } = api.orders.getOrders.useQuery(
     {
       page: pagination.pageIndex * pagination.pageSize,
       pageSize: pagination.pageSize,
@@ -72,6 +77,7 @@ export function DataTable<TData, TValue>({
       placeholderData: keepPreviousData,
     },
   );
+  const utils = api.useUtils();
 
   const data = ordersData?.orders as TData[];
   const totalRows = ordersData?.total;
@@ -150,6 +156,10 @@ export function DataTable<TData, TValue>({
     );
   }
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
@@ -197,6 +207,7 @@ export function DataTable<TData, TValue>({
                   className="h-24 text-center"
                 >
                   No results found matching your query.
+                  <Button onClick={() => utils.invalidate()}>Refresh</Button>
                 </TableCell>
               </TableRow>
             )}

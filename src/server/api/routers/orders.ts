@@ -33,34 +33,34 @@ export const ordersRouter = createTRPCRouter({
           ? statusArray
           : input.fulfilmentStatus;
 
-      const filterCondition = {
-        customer: {
-          is: {
-            OR: [
-              {
-                name: {
-                  contains: input.customer ?? "",
-                  mode: "insensitive",
-                },
-              },
-              {
-                email: {
-                  contains: input.customer ?? "",
-                  mode: "insensitive",
-                },
-              },
-            ],
-          },
-        },
-        createdAt: {
-          gte: input.startDate ? new Date(input.startDate) : undefined,
-          lte: input.endDate ? new Date(input.endDate) : undefined,
-        },
+      // const filterCondition = {
+      //   customer: {
+      //     is: {
+      //       OR: [
+      //         {
+      //           name: {
+      //             contains: input.customer ?? "",
+      //             mode: "insensitive",
+      //           },
+      //         },
+      //         {
+      //           email: {
+      //             contains: input.customer ?? "",
+      //             mode: "insensitive",
+      //           },
+      //         },
+      //       ],
+      //     },
+      //   },
+      //   createdAt: {
+      //     gte: input.startDate ? new Date(input.startDate) : undefined,
+      //     lte: input.endDate ? new Date(input.endDate) : undefined,
+      //   },
 
-        fulfilmentStatus: {
-          in: fulfilmentStatusArray as FulfilmentStatus[],
-        },
-      };
+      //   fulfilmentStatus: {
+      //     in: fulfilmentStatusArray as FulfilmentStatus[],
+      //   },
+      // };
 
       const dateSortOrder = input.dateSortOrder === "asc" ? "asc" : "desc";
 
