@@ -58,13 +58,7 @@ export function DataTable<TData, TValue>({
 
   const { query: dateSortOrder } = useSearchQuery({ title: "dateOrder" });
 
-  const {
-    data: ordersData,
-    isLoading,
-    isRefetching,
-    isFetching,
-    isPending,
-  } = api.orders.getOrders.useQuery(
+  const { data: ordersData, isLoading } = api.orders.getOrders.useQuery(
     {
       page: pagination.pageIndex * pagination.pageSize,
       pageSize: pagination.pageSize,
@@ -105,10 +99,7 @@ export function DataTable<TData, TValue>({
     manualPagination: true,
   });
 
-  // if (isLoading) {
-  //   return <div>Loading</div>;
-  // }
-  if (isLoading&&!data) {
+  if (isLoading && !data) {
     return (
       <div className="space-y-4">
         <DataTableToolbar table={table} />
@@ -158,10 +149,7 @@ export function DataTable<TData, TValue>({
       </div>
     );
   }
-  
-  // if (!data) {
-  //   return null;
-  // }
+
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
@@ -216,7 +204,6 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* <Pagination pageSize={10} totalCount={totalRows!} /> */}
       <DataTablePagination table={table} totalRows={totalRows!} />
     </div>
   );

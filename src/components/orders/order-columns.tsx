@@ -12,6 +12,7 @@ import { statuses } from "./data/data";
 import { DataTableColumnHeader } from "./table-column-header";
 import { type Order, Customer } from "@prisma/client";
 import { format } from "date-fns";
+import OrderItemDetails from "./order-items-details";
 
 /**
  * {
@@ -118,6 +119,23 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "customer",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Address" />
+    ),
+    cell: ({ row }) => {
+      const address = row.original.customer.address;
+      return (
+        <div className="">
+          <h4 className="w-[320px] break-words font-medium">{address}</h4>
+        </div>
+      );
+    },
+
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorKey: "quantity",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Order line items" />
@@ -125,8 +143,11 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     cell: ({ row }) => {
       const quantity = row.original.quantity;
       return (
-        <div className="w-[200px]">
-          {quantity} {quantity > 1 ? "items" : "item"}
+        <div className="w-[120px]">
+          <OrderItemDetails
+            text={`${quantity} ${quantity > 1 ? "items" : "item"}`}
+            orderId={row.original.id}
+          />
         </div>
       );
     },

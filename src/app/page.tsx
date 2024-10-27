@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import { api, HydrateClient } from "@/trpc/server";
 import Orders from "@/components/orders";
 export default async function Home() {
@@ -7,7 +5,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <div className="mx-auto max-w-screen-xl px-2 mb-8">
+      <div className="mx-auto mb-8 max-w-screen-2xl px-2">
         <Orders />
       </div>
     </HydrateClient>
