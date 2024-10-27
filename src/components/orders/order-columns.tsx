@@ -10,7 +10,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 import { statuses } from "./data/data";
 import { DataTableColumnHeader } from "./table-column-header";
-import { type Order, Customer } from "@prisma/client";
+import { type Order, type Customer } from "@prisma/client";
 import { format } from "date-fns";
 import OrderItemDetails from "./order-items-details";
 

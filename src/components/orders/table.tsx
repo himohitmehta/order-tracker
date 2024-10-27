@@ -62,7 +62,6 @@ export function DataTable<TData, TValue>({
   const {
     data: ordersData,
     isLoading,
-    isRefetching,
   } = api.orders.getOrders.useQuery(
     {
       page: pagination.pageIndex * pagination.pageSize,
