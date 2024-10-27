@@ -1,1 +1,0 @@
-this is a component used to create products using the fakerjs api.

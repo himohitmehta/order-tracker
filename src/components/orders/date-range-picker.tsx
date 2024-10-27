@@ -26,11 +26,27 @@ export function DatePickerWithRange({
     title: "endDate",
   });
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: startDate ? new Date(startDate) : new Date(),
+    from: startDate ? new Date(startDate) : undefined,
 
-    to: endDate ? new Date(endDate) : new Date(),
+    to: endDate ? new Date(endDate) : undefined,
   });
   const handleSetDate = async (value: DateRange) => {
+    if (value.from) {
+      console.log("value.from", value.from);
+      setDate((prev) => ({
+        from: value.from,
+        // to: value.to,
+        to: prev?.to,
+      }));
+    }
+    if (value.to) {
+      console.log("value.to", value.to);
+      setDate((prev) => ({
+        from: prev?.from,
+        // to: value.to,
+        to: value?.to,
+      }));
+    }
     if (!value.from || !value.to) return;
     const from = format(value.from, "yyyy-MM-dd");
     const to = format(value.to, "yyyy-MM-dd");
@@ -38,11 +54,17 @@ export function DatePickerWithRange({
     await setEndDate(to);
     setDate(value);
   };
-//   const handleResetDate = async () => {
-//     await setStartDate("");
-//     await setEndDate("");
-//     setDate(undefined);
-//   };
+  React.useEffect(() => {
+    setDate({
+      from: startDate ? new Date(startDate) : undefined,
+      to: endDate ? new Date(endDate) : undefined,
+    });
+  }, [startDate, endDate]);
+  //   const handleResetDate = async () => {
+  //     await setStartDate("");
+  //     await setEndDate("");
+  //     setDate(undefined);
+  //   };
 
   return (
     <div className="flex gap-4">
@@ -81,6 +103,9 @@ export function DatePickerWithRange({
               selected={date}
               onSelect={(value) => handleSetDate(value!)}
               numberOfMonths={2}
+              disabled={{
+                after: new Date(),
+              }}
             />
           </PopoverContent>
         </Popover>

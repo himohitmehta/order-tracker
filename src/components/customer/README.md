@@ -1,1 +1,0 @@
-this is a component used to create customers using the fakerjs api.

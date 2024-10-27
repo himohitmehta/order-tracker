@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Navbar() {
   return (
-    <div className="mx-auto flex max-w-screen-xl gap-4 px-2">
+    <div className="mx-auto flex max-w-screen-xl gap-4 px-2 py-4">
       {links.map((link) => {
         return (
           <div key={link.title}>

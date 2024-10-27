@@ -1,95 +1,47 @@
 import { FulfilmentStatus } from "@prisma/client";
-import {
-  ArrowDownIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
-  CheckCircle,
-  CircleIcon,
-} from "lucide-react";
-import { FaStopwatch, FaQuestionCircle } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
-
-export const labels = [
-  {
-    value: "bug",
-    label: "Bug",
-  },
-  {
-    value: "feature",
-    label: "Feature",
-  },
-  {
-    value: "documentation",
-    label: "Documentation",
-  },
-];
+import { MdOutlineCancel } from "react-icons/md";
+import { GoPackageDependents } from "react-icons/go";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { FcProcess } from "react-icons/fc";
+import { FaRoute } from "react-icons/fa6";
+import { TbTruckReturn } from "react-icons/tb";
+import { RiMailSendLine } from "react-icons/ri";
 
 export const statuses = [
   {
-    // value: "backlog",
-    // label: "Backlog",
     value: FulfilmentStatus.CANCELLED,
     label: "Cancelled",
 
-    icon: FaQuestionCircle,
+    icon: MdOutlineCancel,
   },
   {
-    // value: "todo",
-    // label: "Todo",
     value: FulfilmentStatus.PENDING,
     label: "Pending",
-    icon: CircleIcon,
+    icon: GoPackageDependents,
   },
   {
-    // value: "in progress",
-    // label: "In Progress",
-
     value: FulfilmentStatus.PROCESSING,
     label: "Processing",
-    icon: FaStopwatch,
+    icon: FcProcess,
   },
   {
-    // value: "done",
-    // label: "Done",
     value: FulfilmentStatus.DELIVERED,
     label: "Delivered",
-    icon: CheckCircle,
+    icon: IoMdCheckmarkCircleOutline,
   },
   {
-    // value: "canceled",
-    // label: "Canceled",
     value: FulfilmentStatus.OUT_FOR_DELIVERY,
     label: "Out for Delivery",
-    icon: MdClose,
+    icon: FaRoute,
   },
   {
-    // value: "canceled",
-    // label: "Canceled",
     value: FulfilmentStatus.RETURNED,
     label: "Returned",
-    icon: MdClose,
+    icon: TbTruckReturn,
   },
   {
     value: FulfilmentStatus.DISPATCHED,
     label: "Dispatched",
-    icon: MdClose,
-  }
-];
-
-export const priorities = [
-  {
-    label: "Low",
-    value: "low",
-    icon: ArrowDownIcon,
-  },
-  {
-    label: "Medium",
-    value: "medium",
-    icon: ArrowRightIcon,
-  },
-  {
-    label: "High",
-    value: "high",
-    icon: ArrowUpIcon,
+    icon: RiMailSendLine,
   },
 ];

@@ -118,17 +118,15 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "productIds",
+    accessorKey: "quantity",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Products" />
+      <DataTableColumnHeader column={column} title="Order line items" />
     ),
     cell: ({ row }) => {
-      const productIds = row.original.productIds;
+      const quantity = row.original.quantity;
       return (
         <div className="w-[200px]">
-          {productIds.map((productId) => (
-            <p key={productId}>{productId}</p>
-          ))}
+          {quantity} {quantity > 1 ? "items" : "item"}
         </div>
       );
     },

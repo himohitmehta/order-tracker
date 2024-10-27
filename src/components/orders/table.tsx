@@ -28,29 +28,22 @@ import {
 import { DataTablePagination } from "./table-pagination";
 import { DataTableToolbar } from "./table-toolbar";
 import { api } from "@/trpc/react";
-// import { FulfilmentStatus } from "@prisma/client";
 import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
 import { Skeleton } from "../ui/skeleton";
 import { useSearchQuery } from "@/lib/hooks/orders/use-search-query";
-// import { keepPreviousData } from "@tanstack/react-query";
-// import Pagination from "./pagination";
+import { keepPreviousData } from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  // data: TData[];
-  // totalRows?: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  // data,
-  // totalRows,
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = React.useState({
     pageSize: 10,
     pageIndex: 0,
   });
-  // const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -64,12 +57,10 @@ export function DataTable<TData, TValue>({
   const { query: endDate } = useSearchQuery({ title: "endDate" });
 
   const { query: dateSortOrder } = useSearchQuery({ title: "dateOrder" });
-  // const { query: totalSortOrder } = useSearchQuery({ title: "total" });
 
-  console.log({ columnFilters, query });
   const {
     data: ordersData,
-    // isLoading,
+    isLoading,
     isRefetching,
     isFetching,
     isPending,
@@ -82,12 +73,9 @@ export function DataTable<TData, TValue>({
       startDate: startDate,
       endDate: endDate,
       dateSortOrder: dateSortOrder,
-      // fulfilmentStatus: columnFilters.filter(
-      //   (item) => item.id === "fulfilmentStatus",
-      // )?.values,
     },
     {
-      // placeholderData: keepPreviousData,
+      placeholderData: keepPreviousData,
     },
   );
 
@@ -100,12 +88,9 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnVisibility,
-      // rowSelection,
       columnFilters,
       pagination,
     },
-    // enableRowSelection: true,
-    // onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -123,9 +108,10 @@ export function DataTable<TData, TValue>({
   // if (isLoading) {
   //   return <div>Loading</div>;
   // }
-  if (isRefetching || isFetching || isPending) {
+  if (isLoading&&!data) {
     return (
       <div className="space-y-4">
+        <DataTableToolbar table={table} />
         <div className="rounded-md border">
           <Table>
             <TableHeader>
@@ -172,6 +158,10 @@ export function DataTable<TData, TValue>({
       </div>
     );
   }
+  
+  // if (!data) {
+  //   return null;
+  // }
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />

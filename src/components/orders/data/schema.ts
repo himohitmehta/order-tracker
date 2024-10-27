@@ -12,14 +12,3 @@ export const taskSchema = z.object({
 
 export type Task = z.infer<typeof taskSchema>;
 
-export const orderSchema = z.object({
-  customerName: z.string(),
-  customerAddress: z.string(),
-  fulfillmentStatus: z.string(),
-  orderLineItems: z.array(
-    z.object({
-      product: z.string(),
-      quantity: z.number(),
-    }),
-  ),
-});
