@@ -5,10 +5,13 @@ import { type Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./table-view-options";
 
-import { priorities, statuses } from "./data/data";
+import { statuses } from "./data/data";
 import { DataTableFacetedFilter } from "./table-faceted-filter";
+import { DatePickerWithRange } from "./date-range-picker";
+import { useTableFilters } from "@/lib/hooks/orders/use-table-filters";
+import { useSearchQuery } from "@/lib/hooks/orders/use-search-query";
+import { useDebouncedCallback } from "use-debounce";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -17,37 +20,53 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const { query: search, setQuery } = useSearchQuery({ title: "search" });
+
+  const debounced = useDebouncedCallback(async (value: string) => {
+    await setQuery(value);
+  }, 1000);
+
+  const { query: startDate, setQuery: setStartDate } = useSearchQuery({
+    title: "startDate",
+  });
+
+  const { query: endDate, setQuery: setEndDate } = useSearchQuery({
+    title: "endDate",
+  });
+  const { query: status, setQuery: setStatus } = useTableFilters({
+    title: "Status",
+  });
+  const isFiltered = status.length > 0 || startDate || endDate || search;
+
+  const handleResetDate = async () => {
+    await setStartDate("");
+    await setEndDate("");
+    await setQuery("");
+    await setStatus([]);
+  };
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter Orders..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
+          placeholder="Enter customer name or email to filter"
+          defaultValue={search}
+          onChange={(e) => debounced(e.target.value)}
+          className="h-8 w-[150px] lg:w-[320px]"
         />
-        {table.getColumn("status") && (
+        {table.getColumn("fulfilmentStatus") && (
           <DataTableFacetedFilter
-            column={table.getColumn("status")}
+            column={table.getColumn("fulfilmentStatus")}
             title="Status"
             options={statuses}
           />
         )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
-          />
-        )}
+        <DatePickerWithRange />
+
         {isFiltered && (
           <Button
             variant="ghost"
-            onClick={() => table.resetColumnFilters()}
+            onClick={() => handleResetDate()}
             className="h-8 px-2 lg:px-3"
           >
             Reset
@@ -55,7 +74,6 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
     </div>
   );
 }

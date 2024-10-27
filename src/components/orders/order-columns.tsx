@@ -5,14 +5,14 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Badge } from "@/components/ui/badge";
+// import { Checkbox } from "@/components/ui/checkbox";
 
-import { labels, priorities, statuses } from "./data/data";
-import { type Task } from "./data/schema";
+import { statuses } from "./data/data";
 import { DataTableColumnHeader } from "./table-column-header";
-import { DataTableRowActions } from "./table-row-actions";
-import { type Order, Customer } from "@prisma/client";
+import { type Order, type Customer } from "@prisma/client";
+import { format } from "date-fns";
+import OrderItemDetails from "./order-items-details";
 
 /**
  * {
@@ -46,38 +46,55 @@ interface OrderType extends Order {
 }
 
 export const orderColumns: ColumnDef<OrderType>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //       className="translate-y-[2px]"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //       className="translate-y-[2px]"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Order" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-[200px]">{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Ordered On"
+        orderKey={"dateOrder"}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[200px]">
+        {format(new Date(row.getValue("createdAt")), "MMM dd, yyyy, hh:mm a")}
+      </div>
+    ),
+    // enableSorting: false,
+    // enableHiding: false,
   },
   {
     accessorKey: "customer",
@@ -85,18 +102,57 @@ export const orderColumns: ColumnDef<OrderType>[] = [
       <DataTableColumnHeader column={column} title="Customer" />
     ),
     cell: ({ row }) => {
-    //   const label = labels.find((label) => label.value === row.original.label);
+      //   const label = labels.find((label) => label.value === row.original.label);
       const name = row.original.customer.name;
       const email = row.original.customer.email;
       return (
-        <div className="flex space-x-2">
+        <div className="">
           {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
-          <span className="max-w-[500px] truncate font-medium">{name}</span>
-          <br />
-          <span>{email}</span>
+          <h4 className="max-w-[500px] truncate font-medium">{name}</h4>
+          {/* <br /> */}
+          <p>{email}</p>
         </div>
       );
     },
+
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "customer",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Address" />
+    ),
+    cell: ({ row }) => {
+      const address = row.original.customer.address;
+      return (
+        <div className="">
+          <h4 className="w-[320px] break-words font-medium">{address}</h4>
+        </div>
+      );
+    },
+
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "quantity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Order line items" />
+    ),
+    cell: ({ row }) => {
+      const quantity = row.original.quantity;
+      return (
+        <div className="w-[120px]">
+          <OrderItemDetails
+            text={`${quantity} ${quantity > 1 ? "items" : "item"}`}
+            orderId={row.original.id}
+          />
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "fulfilmentStatus",
@@ -117,6 +173,7 @@ export const orderColumns: ColumnDef<OrderType>[] = [
           {status.icon && (
             <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
           )}
+          {/* {row.getValue("fulfilmentStatus")} */}
           <span>{status.label}</span>
         </div>
       );
@@ -124,27 +181,30 @@ export const orderColumns: ColumnDef<OrderType>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "total",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Order Total" />
+      <DataTableColumnHeader
+        column={column}
+        title="Order Total"
+        orderKey={"total"}
+      />
     ),
     cell: ({ row }) => {
-      const priority = priorities.find(
-        (priority) => priority.value === row.getValue("total"),
-      );
-
-      if (!priority) {
-        return null;
-      }
+      const total = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "USD",
+      }).format(row.getValue("total"));
 
       return (
         <div className="flex items-center">
           {/* {priority.icon && (
             <priority.icon className="text-muted-foreground mr-2 h-4 w-4" />
           )} */}
-          <span>{row.getValue("total")}</span>
+          <span>{total}</span>
         </div>
       );
     },
@@ -152,8 +212,8 @@ export const orderColumns: ColumnDef<OrderType>[] = [
       return value?.includes(row.getValue(id));
     },
   },
-//   {
-//     id: "actions",
-//     cell: ({ row }) => <DataTableRowActions row={row} />,
-//   },
+  //   {
+  //     id: "actions",
+  //     cell: ({ row }) => <DataTableRowActions row={row} />,
+  //   },
 ];

@@ -1,29 +1,68 @@
-# Create T3 App
+# Order Tracker
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A minimal application built with Next.js, tRPC, Typescript, Zod, React Query, React table, Tailwind CSS, Shadcn UI, Prisma and PostgreSQL (Neon for deploying db), and Vercel for application deployment.
 
-## What's next? How do I make an app with this?
+## Features:
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- View list of orders with details like order id, order date, customer name, email, address, order line items, fulfillment status, and total amount.
+- Filter data based on customer name, email, status, and date range.
+- Sort data based on the order date. (you can sort the visible list as per the total amount)
+- Paginated list of orders.
+- Change the rows visible per page.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## How to run the app:
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- Clone the repository.
+- Run `pnpm install` to install the dependencies.
+- Run `pnpm dev` to start the development server.
+- Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Learn More
+## How to run the app in production mode:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- Run `pnpm build` to build the app.
+- Run `pnpm start` to start the production server.
+- Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Connect with Database:
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- Create a `.env` file in the root directory.
+- Add the following environment variables in the `.env` file:
 
-## How do I deploy this?
+```
+DATABASE_URL="postgresql://postgres:password@localhost:5432/order-tracker"
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- Replace the `password` with your PostgreSQL password.
+- Run the following command to generate the Prisma client:
+
+```bash
+pnpm prisma generate
+
+or
+
+pnpm db:generate
+```
+
+- Run the following command to push the schema to the database:
+
+```bash
+pnpm prisma db push
+
+or
+
+pnpm db:push
+```
+
+## known issues:
+
+- Sometimes the data doesn't load properly after resetting the filters. (Need to refresh the page to load the data properly)
+- Sometimes the paginated data doesn't work properly with the queries.
+- On Refreshing the page, the app starts from the page 1, need to sync the page number with pagination as well.
+
+## Demo:
+
+Demo Video: [https://drive.google.com/drive/folders/17M6jAXxgKGnkUkOJSPE6mEoe3tBX_fjf?usp=drive_link](https://drive.google.com/drive/folders/17M6jAXxgKGnkUkOJSPE6mEoe3tBX_fjf?usp=drive_link)
+
+Deployed URL: [https://tracker.himohit.me/](https://tracker.himohit.me/)
+
+Video:[https://drive.google.com/file/d/1wxDxDwk5MiZBYDiTpM1XRYHyUhOt5VD8/view?usp=drive_link](https://drive.google.com/file/d/1wxDxDwk5MiZBYDiTpM1XRYHyUhOt5VD8/view?usp=drive_link)
